@@ -3,340 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIND HACK: PAKIET TOTALNY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <title>NEXUS v4.0 | Architektura Świadomości</title>
     <style>
-        /* --- PSYCHOLOGIA KOLORU --- */
+        /* --- ZMIENNE MOTYWÓW --- */
         :root {
-            --bg-dark: #0b0014; /* Bardzo ciemny fiolet */
-            --bg-card: #1a0b2e;
-            --neon-pink: #ff0099; /* URGENCY / EMOTION */
-            --neon-blue: #00f3ff; /* LOGIC / TECH */
-            --neon-yellow: #fffc00; /* WARNING / ATTENTION */
-            --neon-purple: #bd00ff;
-            --text-white: #ffffff;
+            /* LIGHT MODE */
+            --bg-main: #f0f4f8;
+            --text-main: #1a1a1a;
+            --text-muted: #4a4a4a;
+            --accent-cyan: #0096c7;
+            --accent-purple: #7b2cbf;
+            --accent-gold: #ff9e00;
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-modal: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(240, 244, 248, 0.85);
+            
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
         }
 
-        * { box-sizing: border-box; }
+        body.dark-mode {
+            /* DARK MODE */
+            --bg-main: #020204;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            --accent-cyan: #00f3ff;
+            --accent-purple: #d900ff;
+            --accent-gold: #ffd000;
+            --glass: rgba(10, 10, 10, 0.6);
+            --glass-modal: rgba(5, 5, 10, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 20px 50px rgba(0,0,0,0.6);
+            --nav-bg: rgba(2, 2, 4, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-image: linear-gradient(45deg, #0b0014 25%, #160024 25%, #160024 50%, #0b0014 50%, #0b0014 75%, #160024 75%, #160024 100%);
-            background-size: 40px 40px;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.7;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
+        /* --- CANVAS ENGINE --- */
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: blur(35px); /* Mniejszy blur dla wyraźniejszych kształtów */
+            opacity: 1; 
         }
 
-        /* --- TYPOGRAFIA MOCY --- */
-        h1, h2, h3 {
-            font-family: 'Anton', sans-serif;
-            text-transform: uppercase;
-            line-height: 1;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        p { font-size: 1.1rem; line-height: 1.6; color: #d1d1d1; }
-
-        .highlight-yellow { background: var(--neon-yellow); color: black; padding: 2px 8px; font-weight: 900; transform: skew(-10deg); display: inline-block; }
-        .highlight-pink { color: var(--neon-pink); font-weight: bold; text-decoration: underline; text-decoration-color: var(--neon-yellow); }
-
-        /* --- ELEMENTY FOMO --- */
-        .sticky-banner {
+        /* --- NAV --- */
+        nav {
             position: fixed;
             top: 0; width: 100%;
-            background: var(--neon-pink);
-            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 10px; letter-spacing: 2px; }
+        .logo-icon { width: 12px; height: 12px; background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); transform: rotate(45deg); animation: pulse 3s infinite; }
+
+        .theme-switch {
+            background: var(--glass);
+            border: 1px solid var(--text-muted);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            font-weight: 900;
-            padding: 10px;
-            z-index: 1000;
-            box-shadow: 0 5px 20px rgba(255, 0, 153, 0.5);
-            font-size: 1.2rem;
-            animation: slideDown 0.5s ease-out;
+            padding: 100px 20px 50px;
         }
 
-        @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
+        .hero h1 { 
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 25px; 
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+        
+        .hero p { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 650px; margin-bottom: 40px; }
 
-        .timer-box {
-            background: black;
-            color: var(--neon-yellow);
-            padding: 2px 10px;
-            border-radius: 5px;
-            font-family: monospace;
+        .cta-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        
+        .btn {
+            padding: 16px 32px;
+            background: var(--glass);
+            border: 1px solid var(--accent-cyan);
+            color: var(--text-main);
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
         }
 
-        /* --- SEKCJE I KARTY --- */
+        .btn:hover { background: var(--accent-cyan); color: #fff; border-color: var(--accent-cyan); box-shadow: 0 0 25px rgba(0, 150, 199, 0.5); transform: translateY(-2px); }
+        .btn.secondary { border-color: var(--text-muted); color: var(--text-muted); }
+        .btn.secondary:hover { background: var(--text-main); color: var(--bg-main); border-color: var(--text-main); }
+
+        .gradient-text {
+            background: linear-gradient(120deg, var(--accent-cyan), var(--accent-purple), var(--accent-gold));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 5s linear infinite;
+        }
+
+        /* --- CARDS & SECTIONS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-pad { padding: 100px 0; }
+        .section-title { text-align: center; margin-bottom: 60px; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 2px; font-size: 2rem; }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
         .card {
-            background: var(--bg-card);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 35px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+            transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
+            height: 100%;
+            cursor: pointer;
         }
 
-        .card-pop {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        .card:hover { transform: translateY(-8px); border-color: var(--accent-cyan); }
+        .card::after { content: 'KLIKNIJ, ABY ZBADAĆ ->'; position: absolute; bottom: 20px; right: 20px; font-size: 0.7rem; opacity: 0; transition: 0.3s; color: var(--accent-cyan); font-weight: bold;}
+        .card:hover::after { opacity: 1; }
+
+        .card-icon { font-size: 2rem; margin-bottom: 20px; color: var(--accent-cyan); }
+        .card h3 { margin-bottom: 15px; font-family: var(--font-display); font-size: 1.2rem; }
+        .card p { font-size: 0.95rem; color: var(--text-muted); }
+
+        /* --- MODAL / SUBPAGES SYSTEM --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .card-danger {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 20px rgba(255, 0, 153, 0.2);
-        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
 
-        /* Badge "Triki" */
-        .badge {
-            position: absolute;
-            top: 0; right: 0;
-            background: var(--neon-yellow);
-            color: black;
-            font-weight: 900;
-            padding: 5px 15px;
-            font-size: 0.9rem;
-            border-bottom-left-radius: 10px;
-        }
-
-        /* --- PRZYCISK AKCJI (PULSUJĄCY) --- */
-        .btn-cta {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, var(--neon-pink), #ff5e00);
-            color: white;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 900;
-            padding: 25px;
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            box-shadow: 0 10px 40px rgba(255, 0, 153, 0.4);
-            transition: transform 0.2s;
-            animation: pulse 2s infinite;
-            text-transform: uppercase;
-            font-family: 'Anton', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        .btn-cta:hover {
-            transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 20px 50px rgba(255, 0, 153, 0.6);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 153, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 0, 153, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 153, 0); }
-        }
-
-        /* --- LISTY --- */
-        ul.check-list { list-style: none; padding: 0; }
-        ul.check-list li {
-            margin-bottom: 15px;
-            padding-left: 35px;
+        .modal-content {
+            background: var(--glass-modal);
+            width: 100%; max-width: 800px;
+            max-height: 85vh;
+            border-radius: 20px;
+            border: 1px solid var(--accent-cyan);
+            padding: 50px;
+            overflow-y: auto;
             position: relative;
-            font-weight: 500;
-        }
-        ul.check-list li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--neon-green); /* fallback */
-            color: var(--neon-blue);
-            font-weight: 900;
-            font-size: 1.5rem;
-            line-height: 1;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
         }
 
-        /* RESPONSYWNOŚĆ */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            .btn-cta { font-size: 1.5rem; }
-            .sticky-banner { font-size: 0.9rem; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .close-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none;
+            font-size: 2rem; color: var(--text-muted);
+            cursor: pointer; transition: 0.3s;
         }
+        .close-btn:hover { color: var(--accent-cyan); transform: rotate(90deg); }
+
+        .modal-body h2 { font-family: var(--font-display); margin-bottom: 20px; color: var(--accent-cyan); font-size: 2rem; }
+        .modal-body h4 { margin-top: 30px; margin-bottom: 10px; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--accent-purple); padding-left: 10px;}
+        .modal-body p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-muted); }
+        .modal-body li { margin-bottom: 10px; margin-left: 20px; color: var(--text-muted); }
+
+        /* --- ORACLE SECTION --- */
+        .oracle-box {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .oracle-content { font-size: 1.5rem; font-weight: 300; min-height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; font-style: italic; }
+        
+        /* --- BREATHING PACER --- */
+        .breathing-circle {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-cyan), transparent);
+            margin: 0 auto 20px; opacity: 0.5;
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        /* --- FOOTER --- */
+        footer { padding: 60px 20px; text-align: center; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.02); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulse { 0% { transform: scale(1) rotate(45deg); } 50% { transform: scale(1.2) rotate(45deg); } 100% { transform: scale(1) rotate(45deg); } }
+        @keyframes breathe { 0%, 100% { transform: scale(0.8); opacity: 0.3; } 50% { transform: scale(1.5); opacity: 0.8; } }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .modal-content { padding: 30px 20px; }
+            .card::after { content: none; } /* Ukryj hover text na mobile */
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700&display=swap');
     </style>
 </head>
 <body>
 
-<div class="sticky-banner">
-    ⚡ OFERTA FLASH: CENA ZNIKA ZA <span class="timer-box" id="timer">14:59</span>
-</div>
+    <div id="canvas-container">
+        <canvas id="plasma"></canvas>
+    </div>
 
-<div class="container" style="padding-top: 80px;">
+    <nav>
+        <div class="logo"><div class="logo-icon"></div>NEXUS v4.0</div>
+        <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">Zmiana Trybu</button>
+    </nav>
 
-    <div style="text-align: center; margin-bottom: 60px;">
-        <p style="color: var(--neon-yellow); font-weight: 900; letter-spacing: 3px; margin-bottom: 10px;">⚠ UWAGA: WYSOKIE NAPIĘCIE POZNAWCZE</p>
-        <h1>TRZY NARZĘDZIA<br>HAKOWANIA<br>RZECZYWISTOŚCI</h1>
-        <p style="margin-top: 20px; font-size: 1.3rem; color: white;">
-            Jak wyjść z systemu, negocjować z Bogiem i edytować własne życie jak plik w Wordzie.
-        </p>
-        <div style="margin-top: 30px;">
-            <span class="highlight-yellow">BEZ MEDYTACJI W JASKINI</span>
-            <span class="highlight-yellow" style="margin-left: 10px; background: var(--neon-blue); color: white;">BEZ RELIGIJNEGO BEŁKOTU</span>
+    <section class="hero">
+        <div class="container">
+            <h1>Zaprojektuj Swoją <br><span class="gradient-text">Rzeczywistość</span></h1>
+            <p>Witaj w Nexusie. Kolory przyspieszyły, ponieważ Twoja percepcja się wyostrza. Wybierz moduł poniżej, aby wejść głębiej w strukturę.</p>
+            <div class="cta-group">
+                <button class="btn" onclick="scrollToId('mapa')">Mapa Poziomów</button>
+                <button class="btn secondary" onclick="scrollToId('oracle')">Wyrocznia</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" id="mapa">
+        <div class="container">
+            <h2 class="section-title">Topografia Ascendencji</h2>
+            <div class="grid-cards">
+                <div class="card" onclick="openModal('level1')">
+                    <div class="card-icon">I</div>
+                    <h3>Biologiczny Automat</h3>
+                    <p>Stan reaktywny. Więzień pętli bodziec-reakcja. Kliknij, aby zobaczyć analizę kodu źródłowego.</p>
+                </div>
+                <div class="card" onclick="openModal('level2')">
+                    <div class="card-icon">II</div>
+                    <h3>Konstrukcja Społeczna</h3>
+                    <p>Architektura Ego. Jak system społeczny programuje Twoje "Ja".</p>
+                </div>
+                <div class="card" style="border-color: var(--accent-purple)" onclick="openModal('level3')">
+                    <div class="card-icon">III</div>
+                    <h3>Dekonstrukcja</h3>
+                    <p>Kryzys systemowy (Ciemna Noc). Dlaczego cierpienie jest niezbędnym narzędziem aktualizacji.</p>
+                </div>
+                <div class="card" onclick="openModal('level4')">
+                    <div class="card-icon">IV</div>
+                    <h3>Integracja Cienia</h3>
+                    <p>Alchemia psychiczna. Jak zamienić wyparte lęki w czyste paliwo napędowe.</p>
+                </div>
+                <div class="card" onclick="openModal('level5')">
+                    <div class="card-icon">V</div>
+                    <h3>Architekt Systemu</h3>
+                    <p>Zarządzanie rzeczywistością poprzez intencję. Mechanika kwantowa w życiu codziennym.</p>
+                </div>
+                <div class="card" onclick="openModal('level6')">
+                    <div class="card-icon">VI</div>
+                    <h3>Unitarna Cisza</h3>
+                    <p>Stan ostateczny. Punkt Zero. Rozpuszczenie granicy między Tobą a światem.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" id="oracle">
+        <div class="container">
+            <h2 class="section-title">Systemowa Wyrocznia</h2>
+            <div class="oracle-box">
+                <p>Algorytm losuje wgląd dopasowany do Twojej obecnej wibracji poznawczej.</p>
+                <div class="oracle-content" id="quote-display">"Oczekiwanie na dane wejściowe..."</div>
+                <button class="btn" onclick="generateInsight()">Pobierz Wgląd</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad">
+        <div class="container">
+            <h2 class="section-title">Narzędzia Kalibracji</h2>
+            <div class="grid-cards">
+                <div class="card" style="text-align: center;" onclick="openModal('tool1')">
+                    <h3>Koherencja Serca</h3>
+                    <div class="breathing-circle"></div>
+                    <p>Kliknij, aby poznać technikę synchronizacji mózgu i serca.</p>
+                </div>
+                <div class="card" onclick="openModal('tool2')">
+                    <h3>Obserwator Myśli</h3>
+                    <p>Technika dysocjacji poznawczej. Kliknij, by nauczyć się oddzielać szum od sygnału.</p>
+                </div>
+                <div class="card" onclick="openModal('tool3')">
+                    <h3>Lustro Rzeczywistości</h3>
+                    <p>Mechanika projekcji. Dowiedz się, dlaczego inni ludzie są Twoimi awatarami.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div class="modal-body" id="modal-body">
+                </div>
         </div>
     </div>
 
-    <div class="card card-danger">
-        <h2 style="color: var(--neon-pink);">DLACZEGO CZUJESZ SIĘ JAK W KLATCE?</h2>
-        <p>
-            Urodziłeś się w <strong>LUNAPARKU</strong>. [cite_start]Szkoła, praca, kredyt – to wszystko atrakcje, które mają odwrócić Twoją uwagę [cite: 1185-1190]. Zbierasz "bilety" (pieniądze) i walczysz o "pluszowe misie" (status), które w dniu śmierci są warte ZERO.
-        </p>
-        <p>
-            <span class="highlight-pink">Czujesz ten szum w głowie?</span> To dźwięk Twojego oprogramowania (ego), które boi się, że odkryjesz prawdę: Jesteś Graczem, a nie postacią w grze.
-        </p>
-        <p style="font-weight: 700; font-size: 1.2rem; color: white; text-align: center; margin-top: 20px;">
-            POTRZEBUJESZ KODÓW DO GRY.
-        </p>
-    </div>
+    <footer>
+        NEXUS OS v.4.0 | ARCHITEKTURA ŚWIADOMOŚCI
+    </footer>
 
-    <h3 style="text-align: center; color: var(--neon-blue); margin-bottom: 30px; letter-spacing: 2px;">ZAWARTOŚĆ PAKIETU "GOD MODE":</h3>
+    <script>
+        /* --- 1. SILNIK PLAZMY (PRZYSPIESZONY) --- */
+        const canvas = document.getElementById('plasma');
+        const ctx = canvas.getContext('2d');
+        let isDarkMode = false;
+        let width, height;
+        let particles = [];
 
-    <div class="card card-pop">
-        <div class="badge">NARZĘDZIE #1</div>
-        <h2 style="color: var(--neon-blue);">KLUCZE DO PERCEPCJI</h2>
-        <p style="font-size: 0.9rem; color: var(--neon-blue); margin-top: -15px; margin-bottom: 20px;">PROTOKÓŁ WYJŚCIA Z MATRIXA</p>
-        
-        <ul class="check-list">
-            <li><strong>Technika "Latające Laboratorium":</strong> Zamień sen w poligon. [cite_start]Trenuj umiejętności w nocy, używaj ich w dzień [cite: 448-456].</li>
-            <li><strong>Protokół OOBE:</strong> Wyjdź z ciała. Spójrz na siebie z sufitu. [cite_start]Zrozumiesz, że śmierć to tylko zmiana serwera [cite: 567-582].</li>
-            [cite_start]<li><strong>Wyłącznik "Mechaniki Głodu":</strong> Jak przestać pragnąć rzeczy, których nie potrzebujesz, i odzyskać wolność [cite: 185-191].</li>
-        </ul>
-        <div style="text-align: right; font-weight: 900; font-size: 1.2rem;">Wartość: 197 PLN</div>
-    </div>
-
-    <div class="card card-pop">
-        <div class="badge" style="background: var(--neon-pink); color: white;">NARZĘDZIE #2</div>
-        <h2 style="color: var(--neon-pink);">JAK UBIĆ INTERES Z ABSOLUTEM</h2>
-        <p style="font-size: 0.9rem; color: var(--neon-pink); margin-top: -15px; margin-bottom: 20px;">STRATEGIE NEGOCJACYJNE DLA DUSZY</p>
-        
-        <ul class="check-list">
-            <li><strong>Kosmiczny Biznesplan:</strong> Przestań działać po omacku. [cite_start]Zdefiniuj swoje duchowe KPI i ROI [cite: 3769-3782].</li>
-            <li><strong>4 Modele Boga:</strong> Czy negocjujesz z CEO, Programistą czy Tricksterem? [cite_start]Dopasuj język, aby wygrać [cite: 3257-3368].</li>
-            <li><strong>Analiza SWOT Duszy:</strong> Brutalny audyt Twoich mocnych stron. [cite_start]Wykorzystaj swój sceptycyzm jako broń [cite: 3377-3392].</li>
-        </ul>
-        <div style="text-align: right; font-weight: 900; font-size: 1.2rem;">Wartość: 197 PLN</div>
-    </div>
-
-    <div class="card card-pop">
-        <div class="badge" style="background: var(--neon-purple); color: white;">NARZĘDZIE #3</div>
-        <h2 style="color: var(--neon-purple);">RZECZYWISTOŚĆ SP. Z O.O.</h2>
-        <p style="font-size: 0.9rem; color: var(--neon-purple); margin-top: -15px; margin-bottom: 20px;">PODRĘCZNIK UŻYTKOWNIKA SYMULACJI</p>
-        
-        <ul class="check-list">
-            <li><strong>Wykrywanie Gliczy:</strong> Déjà vu to nie błąd mózgu. To błąd zapisu na serwerze. [cite_start]Naucz się je widzieć [cite: 5473-5477].</li>
-            [cite_start]<li><strong>Technologia Sigili:</strong> Jak pisać własne skrypty rzeczywistości i instalować je w podświadomości [cite: 2672-2693].</li>
-            [cite_start]<li><strong>NPC vs Gracze:</strong> Jak rozpoznać, kto jest świadomym graczem, a kto tylko tłem (botem) [cite: 2739-2758].</li>
-        </ul>
-        <div style="text-align: right; font-weight: 900; font-size: 1.2rem;">Wartość: 197 PLN</div>
-    </div>
-
-    <div class="card" style="background: linear-gradient(135deg, #111, #220022); border: 2px dashed var(--neon-yellow);">
-        <h2 style="text-align: center; color: var(--neon-yellow);">⚡ BONUSY TYLKO W OKNIE TRANSFEROWYM:</h2>
-        
-        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
-            <span>1. Generator Zadań Absurdalnych (Twórczy Chaos)</span>
-            <span style="color: var(--neon-yellow); font-weight: bold;">47 PLN</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
-            <span>2. Szablon Biznesplanu Duszy (XLS/PDF)</span>
-            <span style="color: var(--neon-yellow); font-weight: bold;">67 PLN</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-            <span>3. Apteczka Onironauty (MILD/WBTB)</span>
-            <span style="color: var(--neon-yellow); font-weight: bold;">57 PLN</span>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-bottom: 40px;">
-        <p style="font-size: 1.5rem; color: #888;">WARTOŚĆ CAŁKOWITA: <span style="text-decoration: line-through; color: var(--neon-red);">762 PLN</span></p>
-        
-        <h2 style="font-size: 4rem; margin: 20px 0; line-height: 1;">
-            <span style="color: white;">TYLKO:</span> 
-            <span style="color: var(--neon-blue); text-shadow: 0 0 30px var(--neon-blue);">67 PLN</span>
-        </h2>
-        
-        <p style="color: var(--neon-yellow); font-weight: bold; font-size: 1.1rem;">(Oszczędzasz 91% - Mniej niż 2 bilety do kina)</p>
-    </div>
-
-    <a href="### LINK DO KOSZYKA ###" class="btn-cta">
-        >> POBIERZ PAKIET "GOD MODE" <<
-    </a>
-    
-    <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #aaa;">
-        *Dostęp natychmiastowy. Format PDF + Narzędzia.
-    </p>
-
-    <div style="margin-top: 80px; text-align: center; border: 1px solid #333; padding: 30px; border-radius: 15px;">
-        <h3 style="color: white;">🛡️ GWARANCJA "ANTY-BULLSHIT"</h3>
-        <p style="max-width: 600px; margin: 20px auto;">
-            Kup. Przeczytaj. Przetestuj. Masz 30 dni. <br>
-            Jeśli te książki nie zmienią Twojego spojrzenia na świat, oddam Ci 100% pieniędzy.<br>
-            <strong>I możesz zachować pliki.</strong> Ryzyko = ZERO.
-        </p>
-    </div>
-
-    <div style="text-align: center; margin-top: 80px; padding-bottom: 100px; color: #555;">
-        <p style="font-size: 0.8rem;">Folder33 © 2025 | Wszelkie prawa w symulacji zastrzeżone.</p>
-    </div>
-
-</div>
-
-<script>
-    // AGRESYWNY TIMER
-    function startTimer(duration, display) {
-        var timer = duration, minutes, seconds;
-        setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            display.textContent = minutes + ":" + seconds;
-
-            // Efekt czerwonego licznika przy końcówce
-            if (timer < 60) {
-                display.style.color = "red";
-                display.style.textShadow = "0 0 10px red";
+        const themes = {
+            light: {
+                colors: ['rgba(0, 150, 199, ', 'rgba(123, 44, 191, ', 'rgba(255, 158, 0, '],
+                blend: 'multiply', alpha: 0.4
+            },
+            dark: {
+                colors: ['rgba(0, 243, 255, ', 'rgba(217, 0, 255, ', 'rgba(40, 50, 255, '],
+                blend: 'screen', alpha: 0.5
             }
+        };
 
-            if (--timer < 0) {
-                timer = duration; // Reset loop
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                // ZWIĘKSZONA PRĘDKOŚĆ (VX/VY) DLA SZYBSZEGO RUCHU
+                this.vx = (Math.random() - 0.5) * 3.5; 
+                this.vy = (Math.random() - 0.5) * 3.5; 
+                this.size = Math.random() * 250 + 150; 
+                this.colorIndex = Math.floor(Math.random() * 3);
             }
-        }, 1000);
-    }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -300 || this.x > width + 300) this.vx *= -1;
+                if (this.y < -300 || this.y > height + 300) this.vy *= -1;
+            }
+            draw() {
+                const theme = isDarkMode ? themes.dark : themes.light;
+                const colorBase = theme.colors[this.colorIndex];
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                gradient.addColorStop(0, colorBase + theme.alpha + ')');
+                gradient.addColorStop(1, colorBase + '0)');
+                ctx.fillStyle = gradient; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
 
-    window.onload = function () {
-        var fifteenMinutes = 60 * 15;
-        var display = document.querySelector('#timer');
-        startTimer(fifteenMinutes, display);
-    };
-</script>
+        function initPlasma() {
+            resize(); particles = [];
+            for (let i = 0; i < 18; i++) particles.push(new Particle());
+            animate();
+        }
 
+        function animate() {
+            const theme = isDarkMode ? themes.dark : themes.light;
+            ctx.clearRect(0, 0, width, height);
+            ctx.globalCompositeOperation = theme.blend;
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        /* --- 2. BAZA DANYCH TREŚCI (PODSTRONY) --- */
+        const contentDatabase = {
+            'level1': {
+                title: 'I. Biologiczny Automat',
+                html: `
+                    <p><strong>Status:</strong> Nieświadomy | <strong>Napęd:</strong> Instynkt</p>
+                    <h4>Opis Systemu</h4>
+                    <p>Na tym poziomie człowiek nie żyje, lecz "jest żyty" przez biologiczne algorytmy. Mózg działa w trybie oszczędzania energii, korzystając z gotowych pętli nawykowych. Dominującą strukturą jest ciało migdałowate (ośrodek strachu) i pień mózgu.</p>
+                    <h4>Cechy Charakterystyczne</h4>
+                    <ul>
+                        <li>Reaktywność: Bodziec zewnętrzny natychmiast wywołuje reakcję emocjonalną (bez chwili na refleksję).</li>
+                        <li>Binarna wizja świata: Swój/Obcy, Bezpiecznie/Niebezpiecznie, Przyjemność/Ból.</li>
+                        <li>Brak poczucia czasu: Życie to niekończące się gaszenie pożarów w teraźniejszości.</li>
+                    </ul>
+                    <h4>Jak wyjść wyżej?</h4>
+                    <p>Kluczem jest "Zatrzymanie". Musisz wprowadzić pauzę między bodźcem a reakcją. Zacznij obserwować swój oddech w stresujących sytuacjach.</p>
+                `
+            },
+            'level2': {
+                title: 'II. Konstrukcja Społeczna',
+                html: `
+                    <p><strong>Status:</strong> Adaptacja | <strong>Napęd:</strong> Walidacja</p>
+                    <h4>Opis Systemu</h4>
+                    <p>System operacyjny wgrywa oprogramowanie "Kultura". Jednostka uczy się, że aby przetrwać, musi zadowolić stado. Powstaje "Persona" (Maska) – sztuczna tożsamość, którą prezentujemy światu.</p>
+                    <h4>Główne Błędy Poznawcze</h4>
+                    <ul>
+                        <li>Utożsamienie z rolą: "Jestem prawnikiem/matką/szefem" zamiast "Pełnię rolę...".</li>
+                        <li>Zewnętrzne zasilanie: Poczucie wartości zależy od lajków, pieniędzy i komplementów.</li>
+                        <li>Lęk przed odrzuceniem: Główny hamulec działań.</li>
+                    </ul>
+                    <h4>Zadanie Rozwojowe</h4>
+                    <p>Zadaj sobie pytanie: "Gdyby nikt na świecie nie mógł mnie ocenić, co bym zrobił?". Zacznij odróżniać swoje pragnienia od oczekiwań innych.</p>
+                `
+            },
+            'level3': {
+                title: 'III. Dekonstrukcja (Reset)',
+                html: `
+                    <p><strong>Status:</strong> Krytyczny | <strong>Napęd:</strong> Prawda</p>
+                    <h4>Architektura Upadku</h4>
+                    <p>Często nazywana "Ciemną Nocą Duszy". To moment, gdy stare strategie (z Poziomu I i II) przestają działać. Pojawia się depresja, wypalenie lub trauma. To nie błąd – to funkcja czyszcząca.</p>
+                    <h4>Mechanika Procesu</h4>
+                    <ul>
+                        <li>Rozpad iluzji: Widzisz, że pieniądze czy status nie dają trwałego szczęścia.</li>
+                        <li>Osamotnienie: Czujesz, że nikt Cię nie rozumie, bo wychodzisz poza "stado".</li>
+                        <li>Początek obserwatora: Cierpienie wymusza dystans do własnych myśli.</li>
+                    </ul>
+                    <p>To najważniejszy etap. Jeśli nie uciekniesz w używki, przejdziesz do integracji.</p>
+                `
+            },
+            'level4': {
+                title: 'IV. Integracja Cienia',
+                html: `
+                    <p><strong>Status:</strong> Suwerenny | <strong>Napęd:</strong> Pełnia</p>
+                    <h4>Alchemia Wewnętrzna</h4>
+                    <p>Koncepcja C.G. Junga. Przestajesz dzielić siebie na "dobrego" (pokazywanego światu) i "złego" (chowanego w piwnicy). Odzyskujesz energię, którą wcześniej traciłeś na ukrywanie wad.</p>
+                    <h4>Zastosowanie</h4>
+                    <ul>
+                        <li>Agresja staje się asertywnością i siłą przebicia.</li>
+                        <li>Lęk staje się systemem wczesnego ostrzegania (informacją, nie paraliżem).</li>
+                        <li>Zazdrość staje się mapą Twoich ukrytych pragnień.</li>
+                    </ul>
+                `
+            },
+            'level5': {
+                title: 'V. Architekt Systemu',
+                html: `
+                    <p><strong>Status:</strong> Twórczy | <strong>Napęd:</strong> Wizja</p>
+                    <h4>Kodowanie Rzeczywistości</h4>
+                    <p>Rozumiesz, że świat zewnętrzny jest lustrem wewnętrznego. Przestajesz walczyć z odbiciem w lustrze, a zaczynasz zmieniać to, co stoi przed lustrem (siebie).</p>
+                    <h4>Narzędzia Architekta</h4>
+                    <ul>
+                        <li>Intencja: Precyzyjne ukierunkowanie uwagi bez napięcia.</li>
+                        <li>Synchroniczność: Dostrzeganie znaczących "zbiegów okoliczności".</li>
+                        <li>Płynność: Brak przywiązania do jednego rezultatu. Akceptacja zmienności.</li>
+                    </ul>
+                `
+            },
+            'level6': {
+                title: 'VI. Unitarna Cisza',
+                html: `
+                    <p><strong>Status:</strong> Obecność | <strong>Napęd:</strong> Brak</p>
+                    <h4>Punkt Zero</h4>
+                    <p>Koniec poszukiwań. Stan, w którym znikają pytania. Nie ma już "mnie", który doświadcza "świata". Jest tylko doświadczanie.</p>
+                    <p>To stan flow, medytacji absolutnej, Wu-wei. Działanie dzieje się samo, bez wysiłku woli.</p>
+                `
+            },
+            'tool1': {
+                title: 'Narzędzie: Koherencja Serca',
+                html: `
+                    <h4>Protokół Synchronizacji</h4>
+                    <p>Stres powoduje chaos w rytmie serca. Koherencja to stan, w którym serce, mózg i układ nerwowy działają w tej samej częstotliwości.</p>
+                    <h4>Instrukcja (Wykonaj teraz):</h4>
+                    <ol>
+                        <li>Skup uwagę na środku klatki piersiowej.</li>
+                        <li>Wyobraź sobie, że Twój oddech wpływa i wypływa przez serce.</li>
+                        <li>Oddychaj wolniej i głębiej niż zwykle (5 sekund wdech, 5 sekund wydech).</li>
+                        <li>Przywołaj uczucie wdzięczności lub troski.</li>
+                    </ol>
+                    <p>Już 2 minuty resetują poziom kortyzolu.</p>
+                `
+            },
+            'tool2': {
+                title: 'Narzędzie: Obserwator Myśli',
+                html: `
+                    <h4>Metoda "Niebo i Chmury"</h4>
+                    <p>Większość ludzi myśli, że są swoimi myślami. To błąd. Jesteś przestrzenią, w której myśli się pojawiają.</p>
+                    <h4>Ćwiczenie:</h4>
+                    <p>Wyobraź sobie, że Twój umysł to błękitne niebo (stałe, spokojne). Twoje myśli to chmury (zmienne, przepływające). <br>Kiedy pojawia się zmartwienie ("nie zdążę"), nie wsiadaj na tę chmurę. Powiedz: "O, widzę myśl o braku czasu". I pozwól jej przepłynąć.</p>
+                `
+            },
+            'tool3': {
+                title: 'Narzędzie: Lustro',
+                html: `
+                    <h4>Prawo Projekcji</h4>
+                    <p>Świat jest Twoim rzutnikiem. Jeśli ktoś Cię irytuje, zazwyczaj posiada cechę, której w sobie nie akceptujesz lub sobie na nią nie pozwalasz.</p>
+                    <h4>Algorytm Analizy:</h4>
+                    <ul>
+                        <li><strong>Krok 1:</strong> Kto mnie denerwuje? (np. "Arogancki szef").</li>
+                        <li><strong>Krok 2:</strong> Jaka cecha mnie w nim denerwuje? ("Brak szacunku dla innych").</li>
+                        <li><strong>Krok 3:</strong> Gdzie JA nie mam szacunku do siebie lub innych?</li>
+                    </ul>
+                    <p>Odzyskanie tej projekcji uwalnia Cię od emocjonalnego wpływu tej osoby.</p>
+                `
+            }
+        };
+
+        /* --- 3. LOGIKA MODALA (PODSTRONY) --- */
+        const modal = document.getElementById('modal');
+        const modalBody = document.getElementById('modal-body');
+
+        function openModal(id) {
+            const content = contentDatabase[id];
+            if(!content) return;
+
+            modalBody.innerHTML = `<h2>${content.title}</h2>${content.html}`;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Blokada scrollowania tła
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Zamknij modal klikając w tło
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        /* --- 4. WYROCZNIA (ROZBUDOWANA) --- */
+        const insights = [
+            "To, czego szukasz, jest tym, co patrzy.",
+            "Lęk to tylko ekscytacja bez oddechu. Oddychaj.",
+            "Nie jesteś głosem w swojej głowie. Jesteś tym, który go słyszy.",
+            "Z chaosu wyłania się porządek, tylko jeśli przestaniesz próbować go kontrolować.",
+            "Twoja zewnętrzna rzeczywistość jest wydrukiem twojego wewnętrznego kodu.",
+            "Obserwuj reakcję, a nie sytuację.",
+            "Cierpienie powstaje w luce między tym co jest, a tym co myślisz, że powinno być.",
+            "Mapa nie jest terytorium. Wyjdź poza definicje.",
+            "To nie sytuacja cię stresuje, lecz twoja interpretacja sytuacji.",
+            "Wszystko, co wypierasz, spotkasz jako los.",
+            "Zanim uzdrowisz ciało, musisz uzdrowić umysł.",
+            "Jesteś wszechświatem doświadczającym samego siebie.",
+            "Przeszłość i przyszłość to tylko symulacje w teraźniejszości.",
+            "Prawdziwa wolność to wolność od konieczności bycia kimś szczególnym.",
+            "Ego mówi: 'Gdy wszystko ułoży się, znajdę spokój'. Duch mówi: 'Znajdź spokój, a wszystko się ułoży'."
+        ];
+
+        function generateInsight() {
+            const display = document.getElementById('quote-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+                display.innerText = randomInsight;
+                display.style.opacity = 1;
+            }, 300);
+        }
+
+        /* --- UI UTIL --- */
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('resize', resize);
+        window.onload = initPlasma;
+    </script>
 </body>
 </html>
