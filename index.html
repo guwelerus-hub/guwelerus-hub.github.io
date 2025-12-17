@@ -2,368 +2,351 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ASCENDENCJA | Mobile Nexus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZARODNIK | ŚWIATŁO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;900&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* --- FIZYKA ŚWIATŁA --- */
         :root {
-            --font-tech: 'Share Tech Mono', monospace;
-            --font-flow: 'Montserrat', sans-serif;
-            --glass-bg: rgba(10, 10, 10, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --neon-cyan: #00f3ff;
-            --neon-pink: #ff00ff;
+            --light-core: #ffffff;
+            --light-aura: #fff4e0;
+            --prism-1: rgba(0, 247, 255, 0.4);
+            --prism-2: rgba(255, 0, 221, 0.4);
+            --prism-3: rgba(255, 230, 0, 0.4);
+            --text-dark: #1a1a1a;
+            --gold: #d4af37;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; }
 
         body {
-            background: #000;
-            font-family: var(--font-flow);
-            color: #fff;
-            overflow: hidden; /* Blokada scrolla body, scrollujemy content */
-            height: 100vh; width: 100vw;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-aura);
+            color: var(--text-dark);
+            font-family: 'Raleway', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.8;
         }
 
-        /* --- TŁO: PLAZMA (CANVAS) --- */
-        #plasma-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-        }
-
-        /* --- NAWIGACJA (DOCK DOLNY NA MOBILE) --- */
-        nav {
+        /* --- TŁO: EKSPLOZJA ŚWIATŁA (CSS ART) --- */
+        .light-source {
             position: fixed;
-            bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 500px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 100;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150vw; height: 150vh;
+            background: radial-gradient(circle, 
+                var(--light-core) 10%, 
+                rgba(255, 255, 255, 0.8) 30%, 
+                var(--prism-1) 50%, 
+                var(--prism-2) 70%, 
+                var(--prism-3) 90%);
+            filter: blur(60px);
+            z-index: -2;
+            animation: pulse-light 10s infinite alternate ease-in-out;
         }
 
-        .nav-item {
-            font-family: var(--font-tech);
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.6);
-            cursor: pointer;
-            padding: 10px;
-            transition: 0.3s;
+        .rays {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 200vw; height: 200vw;
+            transform: translate(-50%, -50%);
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(255, 255, 255, 0.5) 20deg,
+                transparent 40deg,
+                rgba(255, 255, 255, 0.3) 60deg,
+                transparent 80deg,
+                rgba(255, 255, 255, 0.6) 120deg,
+                transparent 360deg
+            );
+            z-index: -1;
+            animation: spin 60s linear infinite;
+            mix-blend-mode: soft-light;
+            pointer-events: none;
         }
 
-        .nav-item.active {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan);
-            transform: scale(1.1);
+        @keyframes pulse-light {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
         }
 
-        /* --- KONTENERY TREŚCI --- */
-        .page-section {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 20px 20px 100px 20px; /* Padding dolny na nawigację */
-            overflow-y: auto; /* Scrollowanie wewnątrz sekcji */
-            opacity: 0; pointer-events: none; transform: scale(0.95);
-            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            display: flex; flex-direction: column; align-items: center;
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        .page-section.active {
-            opacity: 1; pointer-events: all; transform: scale(1);
+        /* --- LAYOUT --- */
+        .scroll-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* --- STYLE TYPOGRAFII I UI --- */
+        /* --- TYPOGRAFIA --- */
+        h1, h2, h3 {
+            font-family: 'Cinzel Decorative', serif;
+            text-align: center;
+            color: #000;
+        }
+
         h1 {
-            font-family: var(--font-tech);
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            text-align: center; margin-top: 40px; margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--neon-cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(0,243,255,0.3));
+            font-size: 5rem;
+            line-height: 1;
+            margin: 20vh 0 10vh 0;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            letter-spacing: -2px;
+            animation: float 3s infinite ease-in-out;
         }
 
         h2 {
-            font-family: var(--font-tech); font-weight: normal;
-            color: var(--neon-pink); text-transform: uppercase;
-            margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid var(--neon-pink);
+            font-size: 2.5rem;
+            margin-top: 100px;
+            margin-bottom: 30px;
+            position: relative;
             display: inline-block;
+            width: 100%;
+        }
+
+        h2::after {
+            content: "✦";
+            display: block;
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-top: 10px;
         }
 
         p {
-            line-height: 1.6; max-width: 700px; margin-bottom: 20px;
-            text-align: center; color: #ddd; font-size: 1rem;
+            font-size: 1.25rem;
+            text-align: justify;
+            margin-bottom: 40px;
+            font-weight: 400;
+            color: #222;
+            text-shadow: 0 0 1px rgba(255,255,255,0.5);
         }
 
-        /* KARTY SZKLANE */
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, rgba(255, 215, 0, 0.3) 100%);
+            padding: 0 5px;
+            font-weight: 600;
+        }
+
+        blockquote {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin: 80px 0;
+            padding: 40px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            color: var(--gold);
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* --- EFEKTY SZKŁA (GLASS CARDS) --- */
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 20px;
-            padding: 25px; margin: 15px 0;
-            width: 100%; max-width: 700px;
-            transition: 0.3s;
-        }
-        
-        .glass-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            padding: 50px;
+            margin-bottom: 80px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            transform: translateY(50px);
         }
 
-        .btn-action {
-            margin-top: 20px;
-            padding: 15px 40px;
-            background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            font-family: var(--font-tech);
-            text-transform: uppercase;
+        .glass-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- BUTTONS --- */
+        .yt-float {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 0.8rem;
             letter-spacing: 2px;
-            border-radius: 30px;
-            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             transition: 0.3s;
+            z-index: 100;
+            border: 1px solid white;
         }
-        
-        .btn-action:active { background: var(--neon-cyan); color: #000; }
-
-        /* --- SEKCJA ODDECH (Animacja CSS) --- */
-        .breath-circle {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.2);
-            position: relative; margin: 40px auto;
-            display: flex; justify-content: center; align-items: center;
-            font-family: var(--font-tech);
-        }
-        .breath-circle::before {
-            content: ''; position: absolute; inset: 0; border-radius: 50%;
-            background: radial-gradient(circle, var(--neon-cyan), transparent);
-            opacity: 0.3;
-            animation: breathe 8s ease-in-out infinite;
-        }
-        @keyframes breathe {
-            0%, 100% { transform: scale(0.5); opacity: 0.1; }
-            50% { transform: scale(1.2); opacity: 0.5; }
+        .yt-float:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--gold);
         }
 
-        /* --- RESPONSIVE TWEAKS --- */
-        @media (min-width: 768px) {
-            nav { top: 40px; bottom: auto; width: auto; border-radius: 10px; }
-            .page-section { padding-top: 120px; }
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            margin-top: 150px;
+            padding-bottom: 50px;
+            font-size: 0.8rem;
+            opacity: 0.6;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Share+Tech+Mono&display=swap');
+        .contact-mail {
+            font-family: monospace;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2rem; }
+            .glass-card { padding: 30px; }
+        }
+
     </style>
 </head>
 <body>
 
-    <canvas id="plasma-canvas"></canvas>
+<div class="light-source"></div>
+<div class="rays"></div>
 
-    <nav>
-        <div class="nav-item active" onclick="showPage('home')">HOME</div>
-        <div class="nav-item" onclick="showPage('modules')">WIEDZA</div>
-        <div class="nav-item" onclick="showPage('tools')">PRAXIS</div>
-        <div class="nav-item" onclick="showPage('signal')">KONTAKT</div>
-    </nav>
+<a href="https://www.youtube.com/@ZARODNIK" target="_blank" class="yt-float">
+    ZARODNIK ✦ YOUTUBE
+</a>
 
-    <section id="home" class="page-section active">
-        <h1>ASCENDENCJA</h1>
-        <p>Interfejs kalibracji rzeczywistości.</p>
-        
-        <div class="glass-card" style="text-align: center;">
-            <h3 style="color:var(--neon-cyan); margin-bottom:10px; font-family:var(--font-tech)">STATUS SYSTEMU</h3>
-            <p>Wibracja: Stabilna<br>Poziom Szumu: Wysoki<br>Zalecana akcja: Wyciszenie</p>
-        </div>
+<div class="scroll-container">
 
-        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 30px;">
-            Przesuwaj palcem po ekranie, aby wpłynąć na plazmę.<br>
-            Rzeczywistość reaguje na dotyk.
+    <header>
+        <h1>MANIFEST<br>ŚWIATŁA</h1>
+        <p style="text-align: center; font-style: italic; opacity: 0.7;">
+            Poniższy tekst jest kodem źródłowym Twojego przebudzenia.<br>
+            Czytaj powoli. Oddychaj.
         </p>
-    </section>
+    </header>
 
-    <section id="modules" class="page-section">
-        <h1>BAZA DANYCH</h1>
-        
-        <div class="glass-card">
-            <h2>01. BIO-HACKING</h2>
-            <p>Twoje ciało to sprzęt (hardware). Większość problemów psychicznych to w rzeczywistości stan zapalny lub brak snu. Zanim zaczniesz medytować, napraw sen i dietę.</p>
-        </div>
+    <div class="glass-card">
+        <h2>KOSMICZNA GRA</h2>
+        <p>
+            Czy kiedykolwiek zastanawiałeś się, dlaczego tu jesteś? Odpowiedź jest prostsza, niż myślisz, ale trudniejsza do zaakceptowania przez Twoje ego. Jesteś tutaj, ponieważ <strong>chciałeś zagrać</strong>.
+        </p>
+        <p>
+            Rzeczywistość, którą widzisz, nie jest więzieniem. Jest placem zabaw. Jest symulacją o wysokiej gęstości, zaprojektowaną tak doskonale, że zapomniałeś, iż masz na sobie gogle VR. Ciało to Twój awatar. Życie to Twoja misja. A śmierć? Śmierć to tylko wylogowanie się z serwera.
+        </p>
+        <p>
+            Większość ludzi traktuje tę Grę śmiertelnie poważnie. Walczą o punkty (pieniądze), o odznaki (status) i o terytorium. Nie widzą, że to wszystko jest renderowane w czasie rzeczywistym. Ty jednak zacząłeś dostrzegać piksele.
+        </p>
+    </div>
 
-        <div class="glass-card">
-            <h2>02. EGO SCRIPT</h2>
-            <p>To, co nazywasz "sobą", to zbiór nawyków i cudzych opinii. Nie jesteś głosem w głowie. Jesteś przestrzenią, w której ten głos się pojawia.</p>
-        </div>
+    <blockquote>
+        "Nie jesteś samochodem.<br>Jesteś kierowcą."
+    </blockquote>
 
-        <div class="glass-card">
-            <h2>03. DOPAMINA</h2>
-            <p>Jesteśmy cywilizacją ćpunów dopaminowych. Telefon, który trzymasz, to cyfrowa strzykawka. Odzyskaj kontrolę nad uwagą.</p>
-        </div>
-    </section>
+    <div class="glass-card">
+        <h2>KLUCZE DO PERCEPCJI</h2>
+        <p>
+            Największym trikiem Matrixa jest przekonanie Cię, że Twoja świadomość kończy się na czubku Twojego nosa. To kłamstwo. Twoja świadomość jest nielokalna. Jest jak sygnał Wi-Fi, a mózg to tylko antena.
+        </p>
+        <p>
+            Istnieją drzwi wyjściowe. Nazywamy je <span class="highlight">OOBE</span> (Out of Body Experience) oraz <span class="highlight">Świadomym Snem</span>. Kiedy nauczysz się wychodzić z ciała, strach przed śmiercią znika natychmiast. Widzisz siebie leżącego w łóżku i rozumiesz: "To tylko skafander. Ja jestem czymś więcej".
+        </p>
+        <p>
+            Sen to nie jest "odpoczynek mózgu". Sen to Twoje prywatne laboratorium rzeczywistości. To tam trenujesz latanie, kreację i rozmowę z Podświadomością. To tam jesteś naprawdę wolny.
+        </p>
+    </div>
 
-    <section id="tools" class="page-section">
-        <h1>NARZĘDZIA</h1>
-        <p>Teoria bez praktyki to tylko intelektualna rozrywka.</p>
+    <div class="glass-card">
+        <h2>RZECZYWISTOŚĆ SP. Z O.O.</h2>
+        <p>
+            Żyjemy w systemie opartym na konsensusie. Ściana jest twarda, bo wszyscy umówiliśmy się, że jest twarda. Ale system ma błędy. Nazywamy je "glicze".
+        </p>
+        <p>
+            Déjà vu. Synchroniczność. Telefon od kogoś, o kim właśnie pomyślałeś. To nie przypadki. To momenty, w których silnik renderujący rzeczywistość mruga do Ciebie. To dowody na to, że świat jest plastyczny.
+        </p>
+        <p>
+            Możesz modyfikować ten kod. Twoja Uwaga jest kursorem. Twoja Intencja jest kliknięciem myszy. Gdzie kierujesz uwagę, tam płynie energia renderująca świat. Przestań zasilać dramaty, których nie chcesz przeżywać.
+        </p>
+    </div>
 
-        <div class="glass-card" style="text-align: center;">
-            <h2>KOHERENCJA</h2>
-            <p>Synchronizuj oddech z pulsującym światłem poniżej.</p>
-            <div class="breath-circle">WDECH / WYDECH</div>
-            <p style="font-size: 0.8rem; margin-top: 10px;">4 sekundy wdech - 4 sekundy wydech</p>
-        </div>
+    <blockquote>
+        "Modlitwa to nie prośba.<br>Modlitwa to kodowanie."
+    </blockquote>
 
-        <div class="glass-card">
-            <h2>DEFRAGMENTACJA</h2>
-            <p>Technika "Stop-klatka". W ciągu dnia zatrzymaj się 3 razy i zapytaj: "Czy jestem świadomy w tym momencie?".</p>
-            <button class="btn-action" onclick="alert('Przypomnienie ustawione w twojej świadomości.')">AKTYWUJ KOTWICĘ</button>
-        </div>
-    </section>
+    <div class="glass-card">
+        <h2>NEGOCJACJE Z NIESKOŃCZONOŚCIĄ</h2>
+        <p>
+            Religie nauczyły Cię bać się Boga. Nauczyły Cię bycia małym. Ale Nieskończoność nie chce Twojego strachu. Chce Twojej kreacji.
+        </p>
+        <p>
+            Przestań prosić jak żebrak. Zacznij negocjować jak Partner. Twoja dusza ma swój Biznesplan. Masz tu coś do zrobienia. Jeśli nie wiesz co, jesteś jak statek bez steru. Zdefiniuj swoje warunki. Ustal swoje zasady. Absolut szanuje tylko tych, którzy szanują samych siebie.
+        </p>
+    </div>
 
-    <section id="signal" class="page-section">
-        <h1>SYGNAŁ</h1>
-        
-        <div class="glass-card" style="text-align: center;">
-            <p>Nie szukaj nauczyciela na zewnątrz. Nauczyciel pojawi się, gdy uczeń będzie gotowy.</p>
-            <p>Jeśli jednak potrzebujesz współrzędnych:</p>
-            <h2 style="border: none; font-size: 1.5rem; margin-top: 20px; color: #fff;">kontakt@ascendencja.pl</h2>
-            <div style="margin-top: 30px; font-family: var(--font-tech); opacity: 0.5;">
-                SZYFROWANIE: END-TO-END<br>
-                LOKALIZACJA: POLSKA / EARTH
-            </div>
-        </div>
-    </section>
+    <div class="glass-card" style="border-color: var(--gold); background: rgba(255, 215, 0, 0.05);">
+        <h2>LITURGIA PŁYNNA</h2>
+        <p style="text-align: center; font-style: italic;">
+            (Z fragmentów Scriptum Lucida)
+        </p>
+        <p>
+            Kiedy system pada na kolana – to nie jest koniec. To <strong>Awaria</strong>, która jest darem. Tylko na gruzach starych przekonań można zbudować coś prawdziwego.
+        </p>
+        <p>
+            Wciśnij ciszę. Ruch rodzi się z bezruchu. Słowo rodzi się z milczenia. Aby wejść na wyższy poziom Gry, musisz przestać kompulsywnie grać. Musisz stać się Obserwatorem.
+        </p>
+        <p>
+            Lęk to tylko strażnik progu. Paranoja to nadwrażliwość, która nie znalazła ujścia. Wszystko, co czujesz, jest paliwem. Przetransformuj to.
+        </p>
+        <p style="text-align: center; font-weight: bold; font-size: 1.5rem; margin-top: 50px;">
+            JESTEŚ ŚWIATŁEM, KTÓRE OBSERWUJE SAMEGO SIEBIE.
+        </p>
+    </div>
 
+    <div style="text-align: center; margin-top: 100px;">
+        <p>Koniec Transmisji.</p>
+        <p>Wróć do gry, ale tym razem graj na własnych zasadach.</p>
+    </div>
 
-    <script>
-        /* --- 1. LOGIKA NAWIGACJI (SPA) --- */
-        function showPage(pageId) {
-            // Ukryj wszystkie sekcje
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            // Pokaż wybraną
-            document.getElementById(pageId).classList.add('active');
-            
-            // Aktualizuj nawigację
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            // Znajdź przycisk, który wywołał funkcję (proste mapowanie po tekście byłoby trudne, więc robimy reset)
-            // Tutaj proste podświetlenie po indeksie byłoby lepsze, ale zrobimy prosto:
-            const navItems = document.querySelectorAll('.nav-item');
-            if(pageId === 'home') navItems[0].classList.add('active');
-            if(pageId === 'modules') navItems[1].classList.add('active');
-            if(pageId === 'tools') navItems[2].classList.add('active');
-            if(pageId === 'signal') navItems[3].classList.add('active');
-        }
+    <footer>
+        <a href="https://www.youtube.com/@ZARODNIK" target="_blank" class="yt-float" style="position: static; display: inline-block; margin-bottom: 30px;">
+            SUBSKRYBUJ ZARODNIK
+        </a>
+        <br>
+        <a href="mailto:ascendencja@proton.me" class="contact-mail">ascendencja@proton.me</a>
+    </footer>
 
-        /* --- 2. WEBGL SHADER ENGINE (MOBILE OPTIMIZED) --- */
-        const canvas = document.getElementById('plasma-canvas');
-        const gl = canvas.getContext('webgl', { alpha: false, antialias: false }); // Optymalizacja wydajności
+</div>
 
-        if (!gl) console.error("WebGL not supported");
-
-        const vsSource = `attribute vec2 a_pos; void main() { gl_Position = vec4(a_pos, 0, 1); }`;
-        
-        // Shader Plazmy (Zoptymalizowany loop i funkcje matematyczne)
-        const fsSource = `
-            precision highp float;
-            uniform float u_time;
-            uniform vec2 u_res;
-            uniform vec2 u_touch;
-
-            // Szybka paleta kolorów
-            vec3 palette(float t) {
-                vec3 a = vec3(0.5, 0.5, 0.5);
-                vec3 b = vec3(0.5, 0.5, 0.5);
-                vec3 c = vec3(1.0, 1.0, 1.0);
-                vec3 d = vec3(0.263, 0.416, 0.557);
-                return a + b * cos(6.28318 * (c * t + d));
+<script>
+    // Scroll Reveal Effect
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
             }
+        });
+    }, { threshold: 0.1 });
 
-            void main() {
-                vec2 uv = (gl_FragCoord.xy * 2.0 - u_res) / u_res.y;
-                vec2 uv0 = uv;
-                vec3 finalColor = vec3(0.0);
+    document.querySelectorAll('.glass-card').forEach(card => {
+        observer.observe(card);
+    });
+</script>
 
-                // Wpływ dotyku (subtelny)
-                uv += u_touch * 0.2;
-
-                // Mniej iteracji dla telefonów (3 zamiast 4)
-                for(float i = 0.0; i < 3.0; i++) {
-                    uv = fract(uv * 1.6) - 0.5;
-                    float d = length(uv) * exp(-length(uv0));
-                    
-                    vec3 col = palette(length(uv0) + i * 0.4 + u_time * 0.4);
-                    
-                    d = sin(d * 8.0 + u_time) / 8.0;
-                    d = abs(d);
-                    d = pow(0.01 / d, 1.2);
-                    
-                    finalColor += col * d;
-                }
-                gl_FragColor = vec4(finalColor, 1.0);
-            }
-        `;
-
-        // Boilerplate WebGL
-        function createShader(gl, type, src) {
-            const s = gl.createShader(type);
-            gl.shaderSource(s, src);
-            gl.compileShader(s);
-            return s;
-        }
-        const program = gl.createProgram();
-        gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
-        gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
-        gl.linkProgram(program);
-        gl.useProgram(program);
-
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-        
-        const aPos = gl.getAttribLocation(program, 'a_pos');
-        gl.enableVertexAttribArray(aPos);
-        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-        const uTime = gl.getUniformLocation(program, 'u_time');
-        const uRes = gl.getUniformLocation(program, 'u_res');
-        const uTouch = gl.getUniformLocation(program, 'u_touch');
-
-        // Obsługa Resize i Retina Display
-        function resize() {
-            const dpr = Math.min(window.devicePixelRatio, 2); // Ograniczamy do 2x dla wydajności
-            canvas.width = window.innerWidth * dpr;
-            canvas.height = window.innerHeight * dpr;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            gl.uniform2f(uRes, canvas.width, canvas.height);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // Obsługa Dotyku i Myszy
-        let tx = 0, ty = 0;
-        function updateTouch(x, y) {
-            tx = (x / window.innerWidth) * 2 - 1;
-            ty = -(y / window.innerHeight) * 2 + 1;
-        }
-        
-        window.addEventListener('mousemove', e => updateTouch(e.clientX, e.clientY));
-        window.addEventListener('touchmove', e => {
-            updateTouch(e.touches[0].clientX, e.touches[0].clientY);
-        }, {passive: true});
-
-        // Pętla Renderowania
-        function loop(time) {
-            gl.uniform1f(uTime, time * 0.001);
-            // Wygładzanie ruchu (lerp)
-            const currentTx = gl.getUniform(program, uTouch) || [0,0];
-            // Proste przekazanie bez lerp dla wydajności na mobile, shader sam wygładzi
-            gl.uniform2f(uTouch, tx, ty); 
-            
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-            requestAnimationFrame(loop);
-        }
-        requestAnimationFrame(loop);
-
-    </script>
 </body>
 </html>
